@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import os 
 
-os.chdir(r"C:\Users\ASUS\Desktop\clg\Projects")
+
 st.set_page_config(
     page_title="Premier League Prediction",
     page_icon="⚽",
