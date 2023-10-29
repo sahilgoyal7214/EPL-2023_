@@ -1,4 +1,4 @@
-,Date,Time,Day,Venue,Result,GF,GA,Opponent,xG,xGA,Poss,Attendance,Captain,Formation,Referee,Sh,SoT,Dist,FK,PK,PKatt,Season,Team,home_att,home_def,home_mid,opp_att,opp_def,opp_mid,home_rating,opp_rating,att_rating,def_rating,mid_rating,Venue Code,Hour,Opponent Code,Team Code
+,Date,Time,Day,Venue,Result,GF,GA,Opponent,xG,xGA,Poss,Attendance,Captain,Formation,Referee,Sh,SoT,Dist,FK,PK,PKatt,Season,Team,team_att,team_def,team_mid,opp_att,opp_def,opp_mid,team_rating,opp_rating,att_rating,def_rating,mid_rating,Venue Code,Hour,Opponent Code,Team Code
 0,08-07-2022,16:30,4,Away,1,2,0,West Ham,2.2,0.5,75,62443,İlkay Gündoğan, 4-3-3 ,Michael Oliver,13,1,18.7,1,1,1,2022,Manchester City,7.3,7.015,7.3,6.805,6.98,7.14,7.07,6.86,0.495,0.035,0.16,0,16,21,13
 1,13-08-2022,15:00,5,Home,1,4,0,Bournemouth,1.7,0.1,67,53453,İlkay Gündoğan,4-2-3-1,David Coote,19,7,17.5,0,0,0,2022,Manchester City,7.3,7.015,7.3,6.78,6.805,6.91,7.07,6.81,0.52,0.21,0.39,1,15,2,13
 2,21-08-2022,16:30,6,Away,0,3,3,Newcastle Utd,2.1,1.8,69,52258,İlkay Gündoğan, 4-3-3 ,Jarred Gillett,21,10,16.2,1,0,0,2022,Manchester City,7.3,7.015,7.3,7.015,7.37,7.105,7.07,6.94,0.285,-0.355,0.195,0,16,15,13
