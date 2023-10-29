@@ -8,9 +8,10 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import os 
+import os
+from io import BytesIO
 
-
+os.chdir(r"C:\Users\ASUS\Desktop\clg\Projects")
 st.set_page_config(
     page_title="Premier League Prediction",
     page_icon="⚽",
@@ -27,12 +28,12 @@ st.markdown(f'''   <style>
        ''',   unsafe_allow_html=True)
 # Load training data and prediction data
 training_data = pd.read_csv('training.csv')
-prediction_data = pd.read_csv('prediction_2023.csv')
+prediction_data = pd.read_csv('predictionn_2023.csv')
 eda_data=pd.read_excel('PL Table Prediction PDS.xlsx')
 
 # Function to train the model
 def train_model(train_data):
-    features = ['home_rating', 'opp_rating', 'att_rating', 'def_rating', 'mid_rating',
+    features = ['team_rating', 'opp_rating', 'att_rating', 'def_rating', 'mid_rating',
                 'Opponent Code', 'Team Code', 'Venue Code', 'Hour']
     X = train_data[features]
     y = train_data['Result']
@@ -43,7 +44,7 @@ def train_model(train_data):
 
 # Function to load the saved model and apply predictions
 def predict_results(prediction_data, model):
-    features = ['home_rating', 'opp_rating', 'att_rating', 'def_rating', 'mid_rating',
+    features = ['team_rating', 'opp_rating', 'att_rating', 'def_rating', 'mid_rating',
                 'Opponent Code', 'Team Code', 'Venue Code', 'Hour']
     prediction_data['Predicted_Result'] = model.predict(prediction_data[features])
     return prediction_data
@@ -79,7 +80,7 @@ def load_and_filter_data(file_path, selected_position):
 # Streamlit app
 # Create sidebar for team selection
 
-xls = pd.ExcelFile(r"PL Master Data(1).xlsx")
+xls = pd.ExcelFile(r"PL Master Data.xlsx")
 valid_teams = xls.sheet_names
 with st.sidebar:        
     app = option_menu (
@@ -218,4 +219,64 @@ if app == "Previous 2 Seasons Stats":
     fig = go.Figure(data=[trace], layout=layout)
 
     # Show the plot
-    st.plotly_chart(fig)      
+    st.plotly_chart(fig)
+    st.header("Teamwise Goals vs. Assists")
+    fig = px.scatter(eda_data, x='Goals', y='Assists', color='Team',
+                 labels={'Goals': 'Goals', 'Assists': 'Assists'}, color_discrete_sequence=px.colors.qualitative.Set1)
+
+    # Adding text labels
+    for i in range(len(eda_data)):
+        fig.add_annotation(x=eda_data['Goals'][i] + 0.1, y=eda_data['Assists'][i], text=eda_data['Team'][i], showarrow=False, font=dict(size=8))
+
+    # Update the layout
+    fig.update_layout(xaxis_title='Goals', yaxis_title='Assists', legend_title='Team')
+
+    # Display the plot using Streamlit
+    st.plotly_chart(fig)
+    
+    # Create a bar plot using Plotly for Formation vs Result
+    plt.figure(figsize=(16, 8))
+    st.title('Formation vs Result')
+    sns.set_theme(style="whitegrid")
+    sns.countplot(x='Formation', hue='Result', data=training_data, palette='Set2')
+    plt.xlabel('Formation', fontsize=16)
+    plt.ylabel('Count', fontsize=16)
+    plt.gca().set_facecolor('black')
+    plt.grid(color='gray', linestyle='--', linewidth=0.5)
+
+    # Save the plot to a buffer
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    plt.close()
+
+    # Display the plot in Streamlit
+    st.image(buffer, caption='Formation vs Result', use_column_width=True)
+    
+    team_ratings = training_data.groupby('Team')[['team_rating']].mean().reset_index()
+
+# Sorting the values to get a clearer plot
+    team_ratings = team_ratings.sort_values(by='team_rating', ascending=False)
+    st.header("Team Ratings")
+    # Plotting the bar plot using Plotly
+    fig = px.bar(team_ratings, x='team_rating', y='Team', orientation='h', text='team_rating', color='team_rating')
+    fig.update_layout(xaxis_title='Team Rating', yaxis_title='Team', plot_bgcolor='black', paper_bgcolor='black', font=dict(color='white'))
+    fig.update_traces(marker_color='cyan', marker_line_color='rgb(8,48,107)', marker_line_width=1.5, opacity=0.6)
+
+    # Displaying the plot using Streamlit
+    st.plotly_chart(fig)
+    
+    # Calculate the average values for team_att, team_def, and team_mid for each team
+    average_ratings = training_data.groupby('Team')[['team_att', 'team_def', 'team_mid']].mean().reset_index()
+    st.header("Comparison of Ratings for Each Team")
+
+    # Reshape the data for visualization
+    melted_ratings = average_ratings.melt(id_vars='Team', var_name='Rating Type', value_name='Rating Value')
+
+    # Create an interactive bar plot using Plotly
+    fig = px.bar(melted_ratings, x='Team', y='Rating Value', color='Rating Type', barmode='group')
+
+    # Use the st.plotly_chart function to display the figure in Streamlit
+    st.plotly_chart(fig)
+
+
+      
