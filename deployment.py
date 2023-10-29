@@ -115,7 +115,7 @@ if app== "Team Data":
     st.title("Team Player's Information")
     selected_team = st.selectbox('Select Team', valid_teams)
     st.write("Team:", selected_team)
-    team_data = pd.read_excel(r"PL Master Data(1).xlsx", sheet_name=selected_team)
+    team_data = pd.read_excel(r"PL Master Data.xlsx", sheet_name=selected_team)
     st.write(team_data)
 
 if app == "Previous 2 Seasons Stats":
